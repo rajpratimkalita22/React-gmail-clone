@@ -37,10 +37,9 @@
 }
 
 .emailRow__time {
-    padding-right: 1rem;
+    padding-right: 15px;
+    font-size: 9px;
     font-weight: bold;
-    font-size: 12px;
-    letter-spacing: 1px;
 }
 
 .emailRow__description {

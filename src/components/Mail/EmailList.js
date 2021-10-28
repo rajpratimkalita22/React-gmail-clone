@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Checkbox, IconButton} from '@material-ui/core';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import RedoIcon from '@material-ui/icons/Redo';
@@ -13,8 +13,26 @@ import LocalOfferIcon from '@material-ui/icons/LocalOffer';
 import './EmailList.css';
 import Section from './Section';
 import EmailRow from './EmailRow';
+import { collection, onSnapshot, orderBy, query } from '@firebase/firestore';
+import { db } from '../../firebase';
 
 function EmailList() {
+   const [emails, setEmails] = useState([]);
+
+   useEffect(() => {
+
+      // This feature gets the data from the firebase store and displays it in frontend upon click events
+      const first = query(collection(db, 'emails'), orderBy('timestamp', 'desc'));
+
+      const unsub = onSnapshot(first, (snapShot) => {
+        setEmails(                  // So everytime a change happens inside of setEmails like (add, delete, modify) then the emails on the front end gets updated.
+          snapShot.docs.map((doc) => ({
+            id: doc.id,
+            data: doc.data(),
+          }))
+        )
+      });
+   }, [])
     return (
         <div className='emailList'>
             <div className="emailList__settings">
@@ -56,10 +74,56 @@ function EmailList() {
               </div>
 
               <div className="emailList__list">
+                  {emails.map(({id, data : {to, subject, message, timestamp}}) => (
+                    <EmailRow
+                      id={id}
+                      key={id}   // using key here to avoid rendering of all the emails, so now it will pop one email at each push or send
+                      title={to}
+                      subject={subject}
+                      description={message}
+                      time={new Date(timestamp?.seconds * 1000).toUTCString()}
+                    />
+                  ))}
                  <EmailRow 
                   title="Twitch"
                   subject="Hey fellow streamer!!!"
-                  description="This is a test"
+                  description="This is a test and I want to pass please make me pass"
+                  time="10:32"
+                /> 
+                 <EmailRow 
+                  title="Twitter"
+                  subject="Nahamsec shared news at twitch"
+                  description="This is DOPE"
+                  time="10:00"
+                /> 
+                 <EmailRow 
+                  title="Twitch"
+                  subject="Hey fellow streamer!!!"
+                  description="This is a test and I want to pass please make me pass"
+                  time="10:32"
+                /> 
+                 <EmailRow 
+                  title="Twitter"
+                  subject="Nahamsec shared news at twitch"
+                  description="This is DOPE"
+                  time="10:00"
+                /> 
+                 <EmailRow 
+                  title="Twitch"
+                  subject="Hey fellow streamer!!!"
+                  description="This is a test and I want to pass please make me pass"
+                  time="10:32"
+                /> 
+                 <EmailRow 
+                  title="Twitter"
+                  subject="Nahamsec shared news at twitch"
+                  description="This is DOPE"
+                  time="10:00"
+                /> 
+                 <EmailRow 
+                  title="Twitch"
+                  subject="Hey fellow streamer!!!"
+                  description="This is a test and I want to pass please make me pass"
                   time="10:32"
                 /> 
                  <EmailRow 
